@@ -1,47 +1,28 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
+import useGithubRepositories from "./components/useGithubRepostories/useGithubRepositories";
 
-interface IRepository {
-  id: number;
-  full_name: string;
-  owner: {
-    login: string;
-  }
+type RepositoryState = {
+  id:number;
+  liked: boolean;
 }
 
-type RepositoryProps = {
-  liked: boolean;
-} & IRepository;
-
 function App() {
-  const [repos, setRepos] = useState<RepositoryProps[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    fetch("https://api.github.com/orgs/google/repos")
-      .then(r => r.json())
-      .then((data) => {
-        setRepos(data);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      })
-  }, [])
+  const { repos, error, isLoading } = useGithubRepositories({org : 'google'})
+  const[repositoryLikes, setRepositoryLikes] = useState<RepositoryState[]>([]);
 
   function toggleLike(id: number) {
-    setRepos(prev => prev.map((r) => {
-      if (r.id == id) {
-        return {
-          ...r,
-          liked: !r.liked,
-        };
+    setRepositoryLikes(prevState=>{
+      const exists = prevState.find((r)=>r.id===id);
+
+      if(exists){
+        return prevState.map((r)=>
+        r.id === id ? {...r, liked: !r.liked} : r
+        );
       }
-      return r;
-    }));
+      return[...prevState, {id, liked:true}];
+    })
   }
 
   return (
@@ -49,13 +30,14 @@ function App() {
       {isLoading && <p>Carregando...</p>}
       {error && <p>Erro ao carregar os dados</p>}
       {repos.map((repo) => {
+        const isLiked = repositoryLikes.find((r)=>r.id===repo.id)?.liked;
         return (
           <div key={repo.id}>
             <h2>
               {repo.full_name}
               <span>by {repo.owner.login}</span>
               <button onClick={() => toggleLike(repo.id)}>
-                {repo.liked ? 'Descurtir' : 'Curtir'}
+                {isLiked ? 'Descurtir' : 'Curtir'}
               </button>
             </h2>
           </div>

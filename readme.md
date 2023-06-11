@@ -13,4 +13,11 @@ Esse teste tem como objetivo avaliar o conhecimento técnico do candidato em rel
 - [ ] A aplicação deve permitir desfavoritar um repositório
 - [ ] A aplicação deve exibir os repositórios favoritados 
 
+
+## To-do
+
+- [ ] salvar o estado do botão 'like ou deslike' no local storage
+- [ ] criar um hook para abstrair o data fetching
+- [ ] adicionar um ação de refetch
+
 https://api.github.com/orgs/google/repos
