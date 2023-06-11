@@ -54,7 +54,9 @@ function App() {
             <h2>
               {repo.full_name}
               <span>by {repo.owner.login}</span>
-              <button onClick={() => toggleLike(repo.id)}>Like</button>
+              <button onClick={() => toggleLike(repo.id)}>
+                {repo.liked ? 'Descurtir' : 'Curtir'}
+              </button>
             </h2>
           </div>
         );
