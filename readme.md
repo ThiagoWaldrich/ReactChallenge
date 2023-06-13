@@ -16,8 +16,8 @@ Esse teste tem como objetivo avaliar o conhecimento técnico do candidato em rel
 
 ## To-do
 
-- [ ] salvar o estado do botão 'like ou deslike' no local storage
-- [ ] criar um hook para abstrair o data fetching
+- [ x ] salvar o estado do botão 'like ou deslike' no local storage
+- [ x ] criar um hook para abstrair o data fetching
 - [ ] adicionar um ação de refetch
 
 https://api.github.com/orgs/google/repos

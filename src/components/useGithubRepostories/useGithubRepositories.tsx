@@ -1,19 +1,20 @@
-import { IGithubRepository} from "../../assets/types/IGithubRepository";
-import {useEffect, useState} from "react";
+import { IGithubRepository } from "../../assets/types/IGithubRepository";
+import { useCallback, useEffect, useState } from "react";
 
-type Props ={
-    org:string;
+type Props = {
+    org: string;
 }
 
 
-export default function useGithubRepositories({org}: Props) {
+export default function useGithubRepositories({ org }: Props) {
 
 
     const [repos, setRepos] = useState<IGithubRepository[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
+    const [shouldRefetch, setShouldRefetch] = useState(false);
 
-    useEffect(() => {
+    const fetcher = useCallback(() => {
         fetch(`https://api.github.com/orgs/${org}/repos`)
             .then(r => r.json())
             .then((data) => {
@@ -25,6 +26,10 @@ export default function useGithubRepositories({org}: Props) {
             .finally(() => {
                 setIsLoading(false);
             })
-    }, [])
-    return { repos, isLoading, error }
+    },[])
+
+    useEffect(() => {
+        fetcher()
+    }, [shouldRefetch])
+    return { repos, isLoading, error, refetch: fetcher }
 }
